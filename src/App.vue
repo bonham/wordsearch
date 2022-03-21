@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Navbar from './components/Navbar.vue'
+import Navbar from './components/nav-bar.vue'
 import WsearchForm from './components/WsearchForm.vue'
 export default {
   name: 'App',

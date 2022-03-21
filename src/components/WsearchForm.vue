@@ -11,6 +11,7 @@
       type="text"
       class="form-control"
       aria-describedby="anyCharHelp"
+      @input="processInput"
     >
     <div
       id="anyCharHelp"
@@ -47,20 +48,16 @@ import { WordListFilter } from '@/lib/WordListFilter.js'
 
 const lineArray = fileContent.split("\n")
 const wordList = new WordListFilter(lineArray)
-wordList.reduceWithoutAnyCharInString('äöüÄÖÜß')
+wordList.reduceWithoutAnyCharInString('äöüÄÖÜß').convertToUpperCase()
+
 
 export default {
   data() {
     return {
       anychar: "",
       resultLength: null,
+      words: ""
     };
-  },
-  watch: {
-    // eslint-disable-next-line no-unused-vars
-    anychar(newvalue, oldvalue) {
-      this.recalcResult();
-    },
   },
   mounted() {
     this.recalcResult()
@@ -72,6 +69,11 @@ export default {
       this.resultLength = workingWordList.len()
       this.words = workingWordList.getArray().join(' ')
     },
+    processInput(e) {
+      const up = e.target.value.toUpperCase()
+      this.anychar = up
+      this.recalcResult()
+    }
   },
 };
 </script>

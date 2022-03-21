@@ -24,12 +24,14 @@ class WordListFilter {
 
     const r = _.filter(this.ar, (x) => x.indexOf(c) >= 0);
     this.ar = r
+    return this
   }
 
   reduceAnyCharInString(s) {
     Array.from(s).forEach((c) => {
       this.reduceAnyChar(c)
     })
+    return this
   }
 
   reduceWithoutChar(c) {
@@ -39,12 +41,19 @@ class WordListFilter {
     }
     const r = _.filter(this.ar, (x) => x.indexOf(c) < 0);
     this.ar = r
+    return this
   }
 
   reduceWithoutAnyCharInString(s) {
     Array.from(s).forEach((c) => {
       this.reduceWithoutChar(c)
     })
+    return this
+  }
+
+  convertToUpperCase() {
+    this.ar = _.map(this.ar,x => x.toUpperCase())
+    return this
   }
 }
 

@@ -8,6 +8,7 @@
     "vue"
   ],
   "vetur.validation.template": false,
-  "vetur.format.enable": false
+  "vetur.format.enable": false,
+  "editor.formatOnSave": true
 
 }

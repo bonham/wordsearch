@@ -1,44 +1,55 @@
 <template>
-  <div class="mb-3">
-    <label
-      for="anychar"
-      class="form-label"
-    >Letters at any position</label>
-    <input
-      id="anychar"
-      v-model="anychar"
-      placeholder="Any char"
-      type="text"
-      class="form-control"
-      aria-describedby="anyCharHelp"
-      @input="processInput"
-    >
-    <div
-      id="anyCharHelp"
-      class="form-text"
-    >
-      Letters which should appear anywhere in the word
+  <div class="container-fluid d-flex flex-column">
+    <div class="mb-3">
+      <label
+        for="anychar"
+        class="form-label"
+      >Letters at any position</label>
+      <input
+        id="anychar"
+        v-model="anychar"
+        placeholder="Any char"
+        type="text"
+        class="form-control m-1 w-25"
+        aria-describedby="anyCharHelp"
+        @input="processInput"
+      >
     </div>
-  </div>
-  <div class="mb-3">
     <label
-      for="startLetter"
       class="form-label"
-    >Start</label>
-    <input
-      id="startLetter"
-      type="text"
-      class="form-control"
-    >
+    >Letters at position</label>
+    <div class="mb-3 d-flex">
+      <input
+        id="letter1"
+        type="text"
+        class="form-control oneletter"
+      >
+      <input
+        id="letter2"
+        type="text"
+        class="form-control oneletter"
+      >
+      <input
+        id="letter3"
+        type="text"
+        class="form-control oneletter"
+      >
+      <input
+        id="letter4"
+        type="text"
+        class="form-control oneletter"
+      >
+      <input
+        id="letter5"
+        type="text"
+        class="form-control oneletter"
+      >
+    </div>
+    <h2>{{ resultLength }} {{ anychar }}</h2>
+    <p class="font-monospace wordbody">
+      {{ words }}
+    </p>
   </div>
-  <button
-    class="btn btn-primary"
-    @click="recalcResult"
-  >
-    Submit
-  </button>
-  <h2>{{ resultLength }} {{ anychar }}</h2>
-  <div>{{ words }}</div>
 </template>
 
 <script>
@@ -60,10 +71,10 @@ export default {
     };
   },
   mounted() {
-    this.recalcResult()
+    this.recalcResultAnyChar()
   },
   methods: {
-    recalcResult() {
+    recalcResultAnyChar() {
       const workingWordList = wordList.clone()
       workingWordList.reduceAnyCharInString(this.anychar)
       this.resultLength = workingWordList.len()
@@ -72,8 +83,20 @@ export default {
     processInput(e) {
       const up = e.target.value.toUpperCase()
       this.anychar = up
-      this.recalcResult()
+      this.recalcResultAnyChar
+()
     }
   },
 };
 </script>
+
+<style scoped>
+  .wordbody {
+    color: rgb(68, 8, 8);
+  }
+  .oneletter {
+    width: 2em;
+    margin-left: .2em;
+    margin-right: .2em;
+  }
+</style>

@@ -3,13 +3,16 @@ module.exports = {
 
   env: {
     browser: true,
-    jest: true
+    node: true,
+    jest: true,
+    es6: true,
   },
 
   extends: [
-    'plugin:vue/vue3-recommended'
+    'eslint:recommended',
+    'plugin:vue/vue3-strongly-recommended'
   ],
-
+  
   rules: {
   },
 

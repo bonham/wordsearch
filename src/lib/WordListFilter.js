@@ -51,6 +51,17 @@ class WordListFilter {
     return this
   }
 
+  reduceCharAtPosition(c,pos) {
+
+    if (c.length != 1) {
+      throw Error(`Parameter must have length 1 , but has length ${c.length}`)
+    }
+
+    const r = _.filter(this.ar, (x)=> x[pos] == c)
+    this.ar = r
+    return this
+  }
+
   convertToUpperCase() {
     this.ar = _.map(this.ar,x => x.toUpperCase())
     return this

@@ -27,5 +27,12 @@ describe ('WordListFilter Tests', () => {
     cf.reduceWithoutAnyCharInString("eA")
     expect(cf.len()).toBe(2)
   })
+})
 
+describe('Position Char filters',() => {
+  test('char at position',() => {
+    const cf = new WordListFilter(["Sauber","grAt","bello","übermütig","ohno","Garn"])
+    cf.reduceCharAtPosition("a",1)
+    expect(cf.len()).toBe(2)
+  })
 })

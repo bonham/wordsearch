@@ -20,29 +20,35 @@
     >Letters at position</label>
     <div class="mb-3 d-flex">
       <input
+        id="letter0"
+        type="text"
+        class="form-control oneletter"
+        maxlength="1"
+        @input="processAtPos"
+      >
+      <input
         id="letter1"
         type="text"
         class="form-control oneletter"
+        maxlength="1"
       >
       <input
         id="letter2"
         type="text"
         class="form-control oneletter"
+        maxlength="1"
       >
       <input
         id="letter3"
         type="text"
         class="form-control oneletter"
+        maxlength="1"
       >
       <input
         id="letter4"
         type="text"
         class="form-control oneletter"
-      >
-      <input
-        id="letter5"
-        type="text"
-        class="form-control oneletter"
+        maxlength="1"
       >
     </div>
     <h2>{{ resultLength }} {{ anychar }}</h2>
@@ -79,12 +85,31 @@ export default {
       workingWordList.reduceAnyCharInString(this.anychar)
       this.resultLength = workingWordList.len()
       this.words = workingWordList.getArray().join(' ')
+      return workingWordList
     },
     processInput(e) {
       const up = e.target.value.toUpperCase()
       this.anychar = up
-      this.recalcResultAnyChar
-()
+      this.recalcResultAnyChar()
+    },
+    processAtPos(e) {
+//      const up = e.target.value.toUpperCase()
+      const c = e.target.value.toUpperCase()
+      const regex = /^letter(\d+)$/
+      const found = e.target.id.match(regex)
+      var pos = found[1] // group
+      if (typeof(pos)=="undefined") throw Error("could not extract position integer")
+      pos = Number(pos)
+      console.log(e.target.id, e.target.value, pos)
+      const workingWordList = this.recalcResultAnyChar()
+      console.log(c, pos)
+      workingWordList.reduceCharAtPosition(c,pos)
+      this.resultLength = workingWordList.len()
+      this.words = workingWordList.getArray().join(' ')
+
+
+
+
     }
   },
 };
@@ -95,8 +120,9 @@ export default {
     color: rgb(68, 8, 8);
   }
   .oneletter {
-    width: 2em;
+    width: 3em;
     margin-left: .2em;
     margin-right: .2em;
+    text-align: center;
   }
 </style>

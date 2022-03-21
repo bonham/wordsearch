@@ -7,6 +7,15 @@ class WordListFilter {
   len() {
     return this.ar.length
   }
+
+  getArray() {
+    return this.ar
+  }
+
+  clone() {
+    return new WordListFilter(this.ar)
+  }
+
   reduceAnyChar(c) {
 
     if (c.length != 1) {

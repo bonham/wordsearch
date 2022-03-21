@@ -37,26 +37,18 @@
     Submit
   </button>
   <h2>{{ resultLength }} {{ anychar }}</h2>
+  <div>{{ words }}</div>
 </template>
+
 <script>
+
 import fileContent from "raw-loader!../assets/fiveletters.txt";
 import { WordListFilter } from '@/lib/WordListFilter.js'
 
 const lineArray = fileContent.split("\n")
 const wordList = new WordListFilter(lineArray)
+wordList.reduceWithoutAnyCharInString('äöüÄÖÜß')
 
-function containsUmlaut(s) {
-  const umlaute = ["ä", "ö", "ü", "Ä", "Ö", "Ü", "ß"];
-  for (let i = 0; i < umlaute.length; i++) {
-    const c = umlaute[i];
-    if (s.indexOf(c) >= 0) return true;
-  }
-  return false;
-}
-var ar = fvl.split("\n");
-ar = _.filter(ar, (x) => !containsUmlaut(x));
-ar = _.map(ar, (x) => x.toUpperCase());
-console.log(ar.length);
 export default {
   data() {
     return {
@@ -71,16 +63,14 @@ export default {
     },
   },
   mounted() {
-    console.log("hi");
+    this.recalcResult()
   },
   methods: {
     recalcResult() {
-      var r = ar;
-      Array.from(this.anychar).forEach((c) => {
-        r = _.filter(r, (x) => x.indexOf(c) >= 0);
-      });
-      this.resultLength = r.length;
-      console.log(r);
+      const workingWordList = wordList.clone()
+      workingWordList.reduceAnyCharInString(this.anychar)
+      this.resultLength = workingWordList.len()
+      this.words = workingWordList.getArray().join(' ')
     },
   },
 };

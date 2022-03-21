@@ -39,9 +39,12 @@
   <h2>{{ resultLength }} {{ anychar }}</h2>
 </template>
 <script>
-import fvl from "raw-loader!../assets/fiveletters.txt";
-const _ = require("lodash");
-console.log(fvl.length);
+import fileContent from "raw-loader!../assets/fiveletters.txt";
+import { WordListFilter } from '@/lib/WordListFilter.js'
+
+const lineArray = fileContent.split("\n")
+const wordList = new WordListFilter(lineArray)
+
 function containsUmlaut(s) {
   const umlaute = ["ä", "ö", "ü", "Ä", "Ö", "Ü", "ß"];
   for (let i = 0; i < umlaute.length; i++) {

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <Navbar/>
-    <wsearch-form/>
+    <Navbar />
+    <wsearch-form />
   </div>
 </template>
 

@@ -1,20 +1,31 @@
-import { CharListFilter } from '@/lib/CharListFilter.js'
+import { WordListFilter } from '@/lib/WordListFilter.js'
 
-describe ('CharListFilter Tests', () => {
+describe ('WordListFilter Tests', () => {
   test('Instantiation', () => {
-    const cf = new CharListFilter(["a","A","b"])
+    const cf = new WordListFilter(["a","A","b"])
     expect(cf.len()).toBe(3)
     expect(cf).not.toBeNull() 
   })
   test('Reduce anychar',() => {
-    const cf = new CharListFilter(["Sauber","grAt","bello","übermütig"])
+    const cf = new WordListFilter(["Sauber","grAt","bello","übermütig"])
     cf.reduceAnyChar("g")
     expect(cf.len()).toBe(2)
   })
   test('Reduce anychar in string',()=>{
-    const cf = new CharListFilter(["Sauber","grAt","bello","übermütig"])
+    const cf = new WordListFilter(["Sauber","grAt","bello","übermütig"])
     cf.reduceAnyCharInString('bü')
     expect(cf.len()).toBe(1)
 
   })
+  test('Reduce all except char',() => {
+    const cf = new WordListFilter(["Sauber","grAt","bello","übermütig"])
+    cf.reduceWithoutChar("ü")
+    expect(cf.len()).toBe(3)
+  })
+  test('Reduce all except char',() => {
+    const cf = new WordListFilter(["Sauber","grAt","bello","übermütig","ohno","XXX"])
+    cf.reduceWithoutAnyCharInString("eA")
+    expect(cf.len()).toBe(2)
+  })
+
 })

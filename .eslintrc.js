@@ -1,4 +1,3 @@
-/* eslint-disable quote-props */
 module.exports = {
   root: true,
 
@@ -11,13 +10,7 @@ module.exports = {
     'plugin:vue/vue3-recommended'
   ],
 
-  plugins: [
-    'vue'
-  ],
-
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
   },
 
   overrides: [

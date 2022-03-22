@@ -20,35 +20,13 @@
     >Letters at position</label>
     <div class="mb-3 d-flex">
       <input
-        id="letter0"
+        v-for="field in inputFields"
+        :pos="field.position"
+        :key="field.position"
         type="text"
         class="form-control oneletter"
         maxlength="1"
         @input="processAtPos"
-      >
-      <input
-        id="letter1"
-        type="text"
-        class="form-control oneletter"
-        maxlength="1"
-      >
-      <input
-        id="letter2"
-        type="text"
-        class="form-control oneletter"
-        maxlength="1"
-      >
-      <input
-        id="letter3"
-        type="text"
-        class="form-control oneletter"
-        maxlength="1"
-      >
-      <input
-        id="letter4"
-        type="text"
-        class="form-control oneletter"
-        maxlength="1"
       >
     </div>
     <h2>{{ resultLength }} {{ anychar }}</h2>
@@ -71,6 +49,14 @@ wordList.reduceWithoutAnyCharInString('äöüÄÖÜß').convertToUpperCase()
 export default {
   data() {
     return {
+      inputFields:[
+        { position: 0 },
+        { position: 1 },
+        { position: 2 },
+        { position: 3 },
+        { position: 4 },
+      ],
+      positionConstraints: {},
       anychar: "",
       resultLength: null,
       words: ""
@@ -81,8 +67,16 @@ export default {
   },
   methods: {
     recalcResultAnyChar() {
+
       const workingWordList = wordList.clone()
       workingWordList.reduceAnyCharInString(this.anychar)
+
+      for (const p in this.positionConstraints) {
+        console.log(p, this.positionConstraints[p])
+        const c = this.positionConstraints[p]
+        workingWordList.reduceCharAtPosition(c, p)
+      }
+
       this.resultLength = workingWordList.len()
       this.words = workingWordList.getArray().join(' ')
       return workingWordList
@@ -93,23 +87,20 @@ export default {
       this.recalcResultAnyChar()
     },
     processAtPos(e) {
-//      const up = e.target.value.toUpperCase()
-      const c = e.target.value.toUpperCase()
-      const regex = /^letter(\d+)$/
-      const found = e.target.id.match(regex)
-      var pos = found[1] // group
-      if (typeof(pos)=="undefined") throw Error("could not extract position integer")
-      pos = Number(pos)
-      console.log(e.target.id, e.target.value, pos)
-      const workingWordList = this.recalcResultAnyChar()
-      console.log(c, pos)
-      workingWordList.reduceCharAtPosition(c,pos)
-      this.resultLength = workingWordList.len()
-      this.words = workingWordList.getArray().join(' ')
 
+      const position = Number(e.target.attributes.pos.value)
+      
+      // Overwrite field value
+      const char = e.target.value.toUpperCase()
+      e.target.value=char
 
+      if (char == "") {
+        delete(this.positionConstraints[position])
+      } else {
+        this.positionConstraints[position] = char
+      }
 
-
+      this.recalcResultAnyChar()
     }
   },
 };

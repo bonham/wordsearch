@@ -29,7 +29,7 @@
         @input="processAtPos"
       >
     </div>
-    <h2>{{ resultLength }} {{ anychar }}</h2>
+    <h2>{{ resultLength }}</h2>
     <p class="font-monospace wordbody">
       {{ words }}
     </p>
@@ -38,7 +38,7 @@
 
 <script>
 
-import fileContent from "raw-loader!../assets/fiveletters.txt";
+import fileContent from "raw-loader!../assets/en_US-five.txt";
 import { WordListFilter } from '@/lib/WordListFilter.js'
 
 const lineArray = fileContent.split("\n")
@@ -47,6 +47,7 @@ wordList.reduceWithoutAnyCharInString('äöüÄÖÜß').convertToUpperCase()
 
 
 export default {
+  emits: ['reset'],
   data() {
     return {
       inputFields:[
@@ -72,7 +73,6 @@ export default {
       workingWordList.reduceAnyCharInString(this.anychar)
 
       for (const p in this.positionConstraints) {
-        console.log(p, this.positionConstraints[p])
         const c = this.positionConstraints[p]
         workingWordList.reduceCharAtPosition(c, p)
       }

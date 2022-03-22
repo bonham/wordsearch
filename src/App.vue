@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Navbar />
+    <Navbar @reset="resetAction" />
     <wsearch-form />
   </div>
 </template>
@@ -13,6 +13,11 @@ export default {
   components: {
     Navbar,
     WsearchForm
+  },
+  methods: {
+    resetAction(e) {
+      console.log("Event received",e)
+    }
   }
 }
 </script>

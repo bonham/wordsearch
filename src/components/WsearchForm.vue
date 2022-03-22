@@ -1,38 +1,40 @@
 <template>
-  <div class="container-fluid d-flex flex-column">
-    <div class="mb-3">
+  <div class="container d-flex flex-column shadow">
+    <div class="rounded border p-3 mt-2 mb-1">
+      <div class="mb-1">
+        <label
+          for="anychar"
+          class="form-label"
+        >Letters at any position</label>
+        <input
+          id="anychar"
+          v-model="anychar"
+          type="text"
+          class="form-control w-25"
+          @input="processInput"
+        >
+      </div>
       <label
-        for="anychar"
-        class="form-label"
-      >Letters at any position</label>
-      <input
-        id="anychar"
-        v-model="anychar"
-        placeholder="Any char"
-        type="text"
-        class="form-control m-1 w-25"
-        @input="processInput"
-      >
+        class="form-label mt-1"
+      >Letters at position</label>
+      <div class="mt-1 mb-1 d-flex">
+        <input
+          v-for="field in inputFields"
+          :pos="field.position"
+          :key="field.position"
+          type="text"
+          class="form-control oneletter"
+          maxlength="1"
+          @input="processAtPos"
+          :value="field.text"
+        >
+      </div>
     </div>
-    <label
-      class="form-label"
-    >Letters at position</label>
-    <div class="mb-3 d-flex">
-      <input
-        v-for="field in inputFields"
-        :pos="field.position"
-        :key="field.position"
-        type="text"
-        class="form-control oneletter"
-        maxlength="1"
-        @input="processAtPos"
-        :value="field.text"
-      >
-    </div>
+
     <h2>{{ wordListLength }} {{ lang }}</h2>
-    <p class="font-monospace wordbody">
+    <div class="font-monospace wordbody p-1">
       {{ wordsText }}
-    </p>
+    </div>
   </div>
 </template>
 
@@ -118,7 +120,7 @@ export default {
 
   },
   methods: {
-      
+
     processInput(e) {
       const up = e.target.value.toUpperCase()
       this.anychar = up
@@ -156,8 +158,7 @@ export default {
   }
   .oneletter {
     width: 3em;
-    margin-left: .2em;
-    margin-right: .2em;
+    margin-right: .3em;
     text-align: center;
   }
 </style>

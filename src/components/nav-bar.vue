@@ -1,8 +1,10 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
+  <header
+    class="navbar navbar-expand-sm navbar-light navbar-custom-bg"
+  >
+    <nav class="container">
       <a
-        class="navbar-brand"
+        class="navbar-brand me-4"
         href="#"
       >wordlesearch</a>
       <button
@@ -20,7 +22,7 @@
         class="collapse navbar-collapse"
         id="navbarSupportedContent"
       >
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav me-auto mb-2 mb-sm-0">
           <li
             v-for="l in languages"
             :key="l.id"
@@ -36,15 +38,15 @@
         </ul>
         <form class="d-flex">
           <button
-            class="btn btn-outline-success"
+            class="btn btn-outline-dark"
             @click="$emit('reset')"
           >
             Reset
           </button>
         </form>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </header>
 </template>
 
 <script>
@@ -75,3 +77,9 @@ export default {
 
 }
 </script>
+<style scoped>
+
+.navbar-custom-bg {
+  background-color:aquamarine;
+}
+</style>

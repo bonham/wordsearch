@@ -38,16 +38,23 @@
 
 <script>
 
-import fileContent from "raw-loader!../assets/en_US-five.txt";
+import dic_DE from "raw-loader!../assets/de_DE_frami-five.txt";
+import dic_US from "raw-loader!../assets/en_US-five.txt";
+import dic_HU from "raw-loader!../assets/hu_HU-five.txt";
 import { WordListFilter } from '@/lib/WordListFilter.js'
 
+const lang = "HU"
+const dicts = {}
+dicts["EN"] = dic_US
+dicts["DE"] = dic_DE
+dicts["HU"] = dic_HU
+const fileContent = dicts[lang]
 const lineArray = fileContent.split("\n")
 const wordList = new WordListFilter(lineArray)
 wordList.reduceWithoutAnyCharInString('äöüÄÖÜß').convertToUpperCase()
 
 
 export default {
-  emits: ['reset'],
   data() {
     return {
       inputFields:[

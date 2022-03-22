@@ -11,7 +11,6 @@
         placeholder="Any char"
         type="text"
         class="form-control m-1 w-25"
-        aria-describedby="anyCharHelp"
         @input="processInput"
       >
     </div>
@@ -27,11 +26,12 @@
         class="form-control oneletter"
         maxlength="1"
         @input="processAtPos"
+        :value="field.text"
       >
     </div>
-    <h2>{{ resultLength }}</h2>
+    <h2>{{ wordListLength }} {{ lang }}</h2>
     <p class="font-monospace wordbody">
-      {{ words }}
+      {{ wordsText }}
     </p>
   </div>
 </template>
@@ -43,26 +43,29 @@ import dic_US from "raw-loader!../assets/en_US-five.txt";
 import dic_HU from "raw-loader!../assets/hu_HU-five.txt";
 import { WordListFilter } from '@/lib/WordListFilter.js'
 
-const lang = "HU"
 const dicts = {}
 dicts["EN"] = dic_US
 dicts["DE"] = dic_DE
 dicts["HU"] = dic_HU
-const fileContent = dicts[lang]
-const lineArray = fileContent.split("\n")
-const wordList = new WordListFilter(lineArray)
-wordList.reduceWithoutAnyCharInString('äöüÄÖÜß').convertToUpperCase()
+const wordLists = {}
+for (const l in dicts) {
+
+  const fileContent = dicts[l]
+  const lineArray = fileContent.split("\n")
+  wordLists[l] = new WordListFilter(lineArray).convertToUpperCase()
+}
+wordLists['DE'].reduceWithoutAnyCharInString('äöüÄÖÜß').convertToUpperCase()
 
 
 export default {
   data() {
     return {
       inputFields:[
-        { position: 0 },
-        { position: 1 },
-        { position: 2 },
-        { position: 3 },
-        { position: 4 },
+        { position: 0, text: "" },
+        { position: 1, text: "" },
+        { position: 2, text: "" },
+        { position: 3, text: "" },
+        { position: 4, text: "" },
       ],
       positionConstraints: {},
       anychar: "",
@@ -70,13 +73,29 @@ export default {
       words: ""
     };
   },
-  mounted() {
-    this.recalcResultAnyChar()
+  props: {
+    resetTrigger: {
+      type: Number,
+      default: 0
+    },
+    lang: {
+      type: String,
+      required: true,
+      default: 'EN'
+    }
   },
-  methods: {
-    recalcResultAnyChar() {
-
-      const workingWordList = wordList.clone()
+  mounted() {
+    //this.recalcResultAnyChar()
+  },
+  watch: {
+    // eslint-disable-next-line no-unused-vars
+    resetTrigger(newVal, oldVal) {
+      this.resetForm()
+    }
+  },
+  computed: {
+    workingWordList() {
+      const workingWordList = wordLists[this.lang].clone()
       workingWordList.reduceAnyCharInString(this.anychar)
 
       for (const p in this.positionConstraints) {
@@ -84,14 +103,25 @@ export default {
         workingWordList.reduceCharAtPosition(c, p)
       }
 
-      this.resultLength = workingWordList.len()
-      this.words = workingWordList.getArray().join(' ')
+      // this.resultLength = workingWordList.len()
+      // this.words = workingWordList.getArray().join(' ')
       return workingWordList
+
     },
+    wordListLength() {
+      return this.workingWordList.len()
+    },
+    wordsText() {
+      return this.workingWordList.getArray().join(" ")
+    }
+
+
+  },
+  methods: {
+      
     processInput(e) {
       const up = e.target.value.toUpperCase()
       this.anychar = up
-      this.recalcResultAnyChar()
     },
     processAtPos(e) {
 
@@ -99,6 +129,7 @@ export default {
       
       // Overwrite field value
       const char = e.target.value.toUpperCase()
+      this.inputFields[position].text = char
       e.target.value=char
 
       if (char == "") {
@@ -107,7 +138,13 @@ export default {
         this.positionConstraints[position] = char
       }
 
-      this.recalcResultAnyChar()
+    },
+    resetForm() {
+      this.anychar = ""
+      this.positionConstraints = {}
+      this.inputFields.forEach(x => {
+        x.text = ""
+      })
     }
   },
 };

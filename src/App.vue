@@ -1,7 +1,13 @@
 <template>
   <div class="container">
-    <Navbar @reset="resetAction" />
-    <wsearch-form />
+    <Navbar
+      @reset="resetAction"
+      @lang="setLang"
+    />
+    <wsearch-form
+      :lang="langStatus"
+      :reset-trigger="resetCounter"
+    />
   </div>
 </template>
 
@@ -14,9 +20,19 @@ export default {
     Navbar,
     WsearchForm
   },
+  data() {
+    return {
+      resetCounter: 0,
+      langStatus: "EN"
+    }
+  },
   methods: {
-    resetAction(e) {
-      console.log("Event received",e)
+    resetAction() {
+      this.resetCounter++
+    },
+    setLang(language) {
+      this.resetAction()
+      this.langStatus = language
     }
   }
 }

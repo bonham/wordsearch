@@ -21,18 +21,17 @@
         id="navbarSupportedContent"
       >
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a
-              class="nav-link active"
-              aria-current="page"
-              href="#"
-            >DE</a>
-          </li>
-          <li class="nav-item">
+          <li
+            v-for="l in languages"
+            :key="l.id"
+            class="nav-item"
+          >
             <a
               class="nav-link"
+              :class="{ active: isActive(l.id) }"
+              @click="setLang(l.id)"
               href="#"
-            >EN</a>
+            >{{ l.id }}</a>
           </li>
         </ul>
         <form class="d-flex">
@@ -47,3 +46,32 @@
     </div>
   </nav>
 </template>
+
+<script>
+export default {
+  emits: ['reset','lang'],
+  data() {
+    return {
+      lang: "EN",
+      languages: [
+        { id: 'EN'},
+        { id: 'DE'},
+        { id: 'HU'},
+      ]
+    }
+  },
+  methods: {
+    isActive(current_lang) {
+      if (this.lang == current_lang) 
+        return "active"
+      else 
+        return ""
+    },
+    setLang(l) {
+      this.lang=l
+      this.$emit('lang',l)
+    }
+  }
+
+}
+</script>

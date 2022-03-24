@@ -59,6 +59,7 @@ export default {
         { id: 'EN'},
         { id: 'DE'},
         { id: 'HU'},
+        { id: 'NL'},
       ]
     }
   },

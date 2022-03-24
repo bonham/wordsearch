@@ -27,6 +27,7 @@
           maxlength="1"
           @input="processAtPos"
           :value="field.text"
+          ref="inputref"
         >
       </div>
     </div>
@@ -89,6 +90,7 @@ export default {
     }
   },
   mounted() {
+    //console.log(this.$refs.inputref)
     //this.recalcResultAnyChar()
   },
   watch: {
@@ -136,11 +138,17 @@ export default {
       this.inputFields[position].text = char
       e.target.value=char
 
+      // remove constraint when field empty
       if (char == "") {
         delete(this.positionConstraints[position])
       } else {
         this.positionConstraints[position] = char
       }
+
+      // set focus
+      const maxpos = this.$refs.inputref.length - 1
+      const focusposition = Math.min(position + 1, maxpos)
+      this.$refs.inputref[focusposition].focus()
 
     },
     resetForm() {

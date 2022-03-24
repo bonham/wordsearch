@@ -36,14 +36,13 @@
             >{{ l.id }}</a>
           </li>
         </ul>
-        <form class="d-flex">
-          <button
-            class="btn btn-outline-dark"
-            @click="$emit('reset')"
-          >
-            Reset
-          </button>
-        </form>
+        <button
+          class="btn btn-outline-dark"
+          @click="$emit('reset')"
+          href="#"
+        >
+          Reset
+        </button>
       </div>
     </nav>
   </header>

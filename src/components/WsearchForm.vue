@@ -26,6 +26,7 @@
           class="form-control oneletter"
           maxlength="1"
           @input="processAtPos"
+          @keyup.delete="processDelete"
           :value="field.text"
           ref="inputref"
         >
@@ -130,7 +131,6 @@ export default {
       this.anychar = up
     },
     processAtPos(e) {
-
       const position = Number(e.target.attributes.pos.value)
       
       // Overwrite field value
@@ -138,19 +138,37 @@ export default {
       this.inputFields[position].text = char
       e.target.value=char
 
-      // remove constraint when field empty
+      // this can happen after a backspace. Stop further processing here
+      // Backspace is handled additionally in 'processDelete'
       if (char == "") {
-        delete(this.positionConstraints[position])
-      } else {
-        this.positionConstraints[position] = char
+        return
       }
+
+      // add wordlist constraint
+      this.positionConstraints[position] = char
 
       // set focus
       const maxpos = this.$refs.inputref.length - 1
       const focusposition = Math.min(position + 1, maxpos)
       this.$refs.inputref[focusposition].focus()
-
     },
+    processDelete(e) {
+      const position = Number(e.target.attributes.pos.value)
+      const char = e.target.value
+
+      if (char != "") {
+        console.log("Unexpected - input field not empty", char)
+        return
+      }
+
+      // remove constraint when field empty
+      delete(this.positionConstraints[position])
+
+      // set focus
+      const focusposition = Math.max(position - 1, 0)
+      this.$refs.inputref[focusposition].focus()
+    },
+
     resetForm() {
       this.anychar = ""
       this.positionConstraints = {}

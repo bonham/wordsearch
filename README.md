@@ -10,5 +10,8 @@
 * remove lines with dots :g/\./d
 * digits :g/\d/d 
 * hyphens :g/-/d
-* remove duplicates :% sort u
+* apostroph :g/'/d
+* Umlauts :g/äöüÄÖÜß/d
 * Delete all lines not 5 letters wide using vim command :v/^.\{-5}$/d
+* Convert lowercase ggVGu
+* remove duplicates :% sort u

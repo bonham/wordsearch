@@ -34,9 +34,14 @@
     </div>
 
     <h2>{{ wordListLength }} {{ lang }}</h2>
-    <div class="font-monospace wordbody p-1">
-      {{ wordsText }}
-    </div>
+    <transition @after-leave="wordListFadeIn">
+      <div
+        v-show="showWordlist"
+        class="font-monospace wordbody p-1"
+      >
+        {{ wordsText }}
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -76,7 +81,8 @@ export default {
       positionConstraints: {},
       anychar: "",
       resultLength: null,
-      words: ""
+      wordsText: "",
+      showWordlist: false,
     };
   },
   props: {
@@ -91,8 +97,7 @@ export default {
     }
   },
   mounted() {
-    //console.log(this.$refs.inputref)
-    //this.recalcResultAnyChar()
+    this.wordListFadeIn()
   },
   watch: {
     // eslint-disable-next-line no-unused-vars
@@ -118,7 +123,7 @@ export default {
     wordListLength() {
       return this.workingWordList.len()
     },
-    wordsText() {
+    wordsTextNew() {
       return this.workingWordList.getArray().join(" ")
     }
 
@@ -129,6 +134,7 @@ export default {
     processInput(e) {
       const up = e.target.value.toUpperCase()
       this.anychar = up
+      this.wordListFadeOut()
     },
     processAtPos(e) {
       const position = Number(e.target.attributes.pos.value)
@@ -147,6 +153,8 @@ export default {
       // add wordlist constraint
       this.positionConstraints[position] = char
 
+      this.wordListFadeOut()
+
       // set focus
       const maxpos = this.$refs.inputref.length - 1
       const focusposition = Math.min(position + 1, maxpos)
@@ -163,10 +171,22 @@ export default {
 
       // remove constraint when field empty
       delete(this.positionConstraints[position])
+      this.wordListFadeOut()
 
       // set focus
       const focusposition = Math.max(position - 1, 0)
       this.$refs.inputref[focusposition].focus()
+    },
+
+    wordListFadeOut() {
+
+      this.showWordlist = false
+      // transition hook after-leave will take care call wordListFadeIn()
+    },
+
+    wordListFadeIn() {
+      this.wordsText = this.wordsTextNew
+      this.showWordlist = true
     },
 
     resetForm() {
@@ -189,4 +209,14 @@ export default {
     margin-right: .3em;
     text-align: center;
   }
+
+ .v-enter-active,
+.v-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 </style>

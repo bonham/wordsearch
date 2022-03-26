@@ -27,10 +27,34 @@ class WordListFilter {
     return this
   }
 
-  reduceAnyCharInString(s) {
-    Array.from(s).forEach((c) => {
+  reduceByMultChars(c, n) {
+    if (c.length != 1) {
+      throw Error(`Parameter must have length 1 , but has length ${c.length}`)
+    }
+
+    if ( n == 1 ) { 
       this.reduceAnyChar(c)
-    })
+      return
+
+    } else {
+      const r = _.filter(this.ar, (x) => {
+        const regex = new RegExp(c,'g')
+        const numOc = (x.match(regex)||[]).length
+        return (numOc >= n)
+      })
+      this.ar = r
+    }
+  }
+
+  reduceAnyCharInString(s) {
+    const charhist = charHistogram(s)
+
+    // iterate over properties
+    for (const c in charhist) {
+      const numOccurrence = charhist[c]
+      this.reduceByMultChars(c, numOccurrence)
+    }
+
     return this
   }
 
@@ -68,5 +92,16 @@ class WordListFilter {
   }
 }
 
-export { WordListFilter }
+function charHistogram(s) {
+
+  const counted = {}
+  // returns obj of format { 'x' : 3, 'y': 1 }
+  for(let c of s) {
+    const curVal = (counted[c] === undefined) ? 0 : counted[c]
+    counted[c] = curVal + 1
+  }
+  return counted
+}
+
+export { WordListFilter, charHistogram }
 

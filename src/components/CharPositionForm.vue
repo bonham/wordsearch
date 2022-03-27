@@ -32,7 +32,7 @@ export default {
         { position: 3, text: "" },
         { position: 4, text: "" },
       ],
-      positionConstraints: {},
+      formValues: {},
     }
   },
   
@@ -59,9 +59,9 @@ export default {
       }
 
       // add wordlist constraint
-      this.positionConstraints[position] = char
+      this.formValues[position] = char
 
-      this.emitConstraints()
+      this.emitFormValues()
 
       // set focus
       const maxpos = this.$refs.inputref.length - 1
@@ -79,16 +79,16 @@ export default {
       }
 
       // remove constraint when field empty
-      delete(this.positionConstraints[position])
-      this.emitConstraints()
+      delete(this.formValues[position])
+      this.emitFormValues()
 
       // set focus
       const focusposition = Math.max(position - 1, 0)
       this.$refs.inputref[focusposition].focus()
     },
 
-    emitConstraints() {
-      this.$emit('pos-form-update', this.positionConstraints)
+    emitFormValues() {
+      this.$emit('pos-form-update', this.formValues)
     },
 
   },

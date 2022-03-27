@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <h2>{{ wordListLength }} {{ lang }}</h2>
+    <h2>{{ resultLength.toFixed() }} {{ lang }}</h2>
     <transition @after-leave="wordListFadeIn">
       <div
         v-show="showWordlist"
@@ -48,6 +48,7 @@
 <script>
 
 import { wordLists } from "@/lib/wordlists"
+import gsap from 'gsap'
 
 export default {
   data() {
@@ -61,7 +62,7 @@ export default {
       ],
       positionConstraints: {},
       anychar: "",
-      resultLength: null,
+      resultLength: 0,
       wordsText: "",
       showWordlist: false,
     };
@@ -78,11 +79,20 @@ export default {
     }
   },
   mounted() {
+
+    // trigger watcher
+    this.resultLength = this.workingWordList.len()
+
+    // 
     this.wordListFadeIn()
   },
   watch: {
     resetTrigger() {
       this.resetForm()
+    },
+    workingWordList(newval) {
+      // count up animation
+      gsap.to(this, { duration: 0.2, resultLength: newval.len()})
     }
   },
   computed: {
@@ -95,15 +105,10 @@ export default {
         workingWordList.reduceCharAtPosition(c, p)
       }
 
-      // this.resultLength = workingWordList.len()
-      // this.words = workingWordList.getArray().join(' ')
       return workingWordList
 
     },
-    wordListLength() {
-      return this.workingWordList.len()
-    },
-    wordsTextNew() {
+      wordsTextNew() {
       return this.workingWordList.getArray().join(" ")
     }
 

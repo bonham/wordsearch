@@ -1,19 +1,10 @@
 <template>
   <div class="container d-flex flex-column shadow">
     <div class="rounded border p-3 mt-2 mb-1">
-      <div class="mb-1">
-        <label
-          for="anychar"
-          class="form-label"
-        >Letters at any position</label>
-        <input
-          id="anychar"
-          v-model="anychar"
-          type="text"
-          class="form-control w-25"
-          @input="processInput"
-        >
-      </div>
+      <CharAnyPositionForm 
+        :reset-trigger="resetCounter"
+        @anypos-form-update="processCharAnyPositionConstraints"
+      />
       <CharPositionForm 
         :reset-trigger="resetCounter"
         @pos-form-update="processPositionConstraints"
@@ -35,12 +26,14 @@
 <script>
 
 import CharPositionForm from '@/components/CharPositionForm'
+import CharAnyPositionForm from '@/components/CharAnyPositionForm'
 import { wordLists } from "@/lib/wordlists"
 import gsap from 'gsap'
 
 export default {
   components: {
-    CharPositionForm
+    CharAnyPositionForm,
+    CharPositionForm,
   },
   data() {
     return {
@@ -100,17 +93,17 @@ export default {
 
   },
   methods: {
+    processCharAnyPositionConstraints(e) {
+      this.anychar = e
+      this.wordListFadeOut()
+    },
+
     processPositionConstraints(e) {
       this.positionConstraints = e
       this.wordListFadeOut()
     },
-    processInput(e) {
-      const up = e.target.value.toUpperCase()
-      this.anychar = up
-      this.wordListFadeOut()
-    },
-    wordListFadeOut() {
 
+    wordListFadeOut() {
       this.showWordlist = false
       // transition hook after-leave will take care call wordListFadeIn()
     },
@@ -121,14 +114,12 @@ export default {
     },
 
     resetForm() {
-      // reset CharPositionForm
+      // reset both forms
       this.resetCounter++
-
-      // reset CharAnyPosition Form
-      this.anychar = ""
 
       // reset wordList
       this.positionConstraints = {}
+      this.anychar = ""
       this.wordListFadeOut()
     }
   },

@@ -97,6 +97,7 @@ export default {
       this.inputFields.forEach(x => {
         x.text = ""
       })
+      this.formValues = {}
     }
   }
 }

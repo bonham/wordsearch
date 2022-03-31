@@ -11,15 +11,11 @@
       />
     </div>
 
-    <h2>{{ resultLength.toFixed() }} {{ lang }}</h2>
-    <transition @after-leave="wordListFadeIn">
-      <div
-        v-show="showWordlist"
-        class="font-monospace wordbody p-1"
-      >
-        {{ wordsText }}
-      </div>
-    </transition>
+    <ResultText 
+      :words-text="wordsText"
+      :result-length="resultLength"
+      :lang="lang"
+    />
   </div>
 </template>
 
@@ -28,21 +24,19 @@
 import CharPositionForm from '@/components/CharPositionForm'
 import CharAnyPositionForm from '@/components/CharAnyPositionForm'
 import { wordLists } from "@/lib/wordlists"
-import gsap from 'gsap'
+import ResultText from '@/components/ResultText'
 
 export default {
   components: {
     CharAnyPositionForm,
     CharPositionForm,
+    ResultText,
   },
   data() {
     return {
+      resetCounter: 0,
       anychar: "",
       positionConstraints: {},
-      resultLength: 0,
-      wordsText: "",
-      showWordlist: false,
-      resetCounter: 0,
     };
   },
   props: {
@@ -57,21 +51,11 @@ export default {
     }
   },
   mounted() {
-
-    // trigger watcher
-    this.resultLength = this.workingWordList.len()
-
-    // 
-    this.wordListFadeIn()
   },
   watch: {
     resetTrigger() {
       this.resetForm()
     },
-    workingWordList(newval) {
-      // count up animation
-      gsap.to(this, { duration: 0.2, resultLength: newval.len()})
-    }
   },
   computed: {
     workingWordList() {
@@ -84,33 +68,23 @@ export default {
       }
 
       return workingWordList
-
     },
-      wordsTextNew() {
+
+    resultLength() {
+      return this.workingWordList.len()
+    },
+
+    wordsText() {
       return this.workingWordList.getArray().join(" ")
     }
-
-
   },
   methods: {
     processCharAnyPositionConstraints(e) {
       this.anychar = e
-      this.wordListFadeOut()
     },
 
     processPositionConstraints(e) {
       this.positionConstraints = e
-      this.wordListFadeOut()
-    },
-
-    wordListFadeOut() {
-      this.showWordlist = false
-      // transition hook after-leave will take care call wordListFadeIn()
-    },
-
-    wordListFadeIn() {
-      this.wordsText = this.wordsTextNew
-      this.showWordlist = true
     },
 
     resetForm() {
@@ -120,24 +94,8 @@ export default {
       // reset wordList
       this.positionConstraints = {}
       this.anychar = ""
-      this.wordListFadeOut()
     }
   },
 };
 </script>
 
-<style scoped>
-  .wordbody {
-    color: rgb(68, 8, 8);
-  }
-
- .v-enter-active,
-.v-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
-</style>

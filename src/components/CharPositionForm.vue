@@ -12,7 +12,7 @@
         class="form-control oneletter"
         maxlength="1"
         @input="processAtPos"
-        @keyup.delete="processDelete"
+        @keydown.delete="processDelete"
         :value="field.text"
         ref="inputref"
       >
@@ -46,45 +46,40 @@ export default {
     
     processAtPos(e) {
       const position = Number(e.target.attributes.pos.value)
+      //console.log("atpos", position, e.data, e)
       
-      // Overwrite field value
-      const char = e.target.value.toUpperCase()
-      this.inputFields[position].text = char
-      e.target.value=char
+      if (e.data != null) { 
+        const firstChar = e.data[0]
+        const charUpper = firstChar.toUpperCase()
 
-      // this can happen after a backspace. Stop further processing here
-      // Backspace is handled additionally in 'processDelete'
-      if (char == "") {
-        return
+        // overwrite field
+        this.inputFields[position].text = charUpper
+
+        // add wordlist constraint and send event to parent components
+        this.formValues[position] = charUpper
+
+        // set focus
+        const maxpos = this.$refs.inputref.length - 1
+        const focusposition = Math.min(position + 1, maxpos)
+        this.$refs.inputref[focusposition].focus()
+      } else {
+
+        this.inputFields[position].text = ""
+        delete(this.formValues[position])
+
       }
-
-      // add wordlist constraint
-      this.formValues[position] = char
-
       this.emitFormValues()
-
-      // set focus
-      const maxpos = this.$refs.inputref.length - 1
-      const focusposition = Math.min(position + 1, maxpos)
-      this.$refs.inputref[focusposition].focus()
     },
 
     processDelete(e) {
+
       const position = Number(e.target.attributes.pos.value)
-      const char = e.target.value
-
-      if (char != "") {
-        console.log("Unexpected - input field not empty", char)
-        return
+      var focusposition
+      // Field was empty - change focus before inputevent is processed
+      if (e.target.value.length == 0) {
+        focusposition = Math.max(position - 1, 0)
+        this.$refs.inputref[focusposition].focus()
       }
-
-      // remove constraint when field empty
-      delete(this.formValues[position])
-      this.emitFormValues()
-
-      // set focus
-      const focusposition = Math.max(position - 1, 0)
-      this.$refs.inputref[focusposition].focus()
     },
 
     emitFormValues() {

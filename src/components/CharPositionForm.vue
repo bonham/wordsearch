@@ -11,8 +11,8 @@
         type="text"
         class="form-control oneletter"
         maxlength="1"
-        @keydown="processKeyDown"
         @input="processAtPos"
+        @keydown.delete="processDelete"
         :value="field.text"
         ref="inputref"
       >
@@ -61,6 +61,7 @@ export default {
     
     processAtPos(e) {
       const position = Number(e.target.attributes.pos.value)
+      //console.log("atpos", position, e.data, e)
       
       if (e.data != null) { 
         const firstChar = e.data[0]
@@ -70,7 +71,7 @@ export default {
         this.inputFields[position].text = charUpper
 
         // set focus
-        const maxpos = this.inputFields.length - 1
+        const maxpos = this.$refs.inputref.length - 1
         const focusposition = Math.min(position + 1, maxpos)
         this.$refs.inputref[focusposition].focus()
       } else {
@@ -81,29 +82,11 @@ export default {
       this.emitFormValues()
     },
 
-    processKeyDown(e) {
-
-      const position = Number(e.target.attributes.pos.value)
-
-      if(e.key == 'Backspace' || e.key =='Delete') {
-        this.processDelete(e)
-        return
-      }
-      
-      // if we are not deleting, then check if current pos already
-      // has a char in it ( edge case ). Then move one right.
-      if (e.target.value.length>0) {
-        const maxpos = this.inputFields.length - 1
-        const focusposition = Math.min(position + 1, maxpos)
-        this.$refs.inputref[focusposition].focus()        
-      }
-    },
-
     processDelete(e) {
 
       const position = Number(e.target.attributes.pos.value)
       var focusposition
-      // Field was empty - change focus to left field before inputevent is processed
+      // Field was empty - change focus before inputevent is processed
       if (e.target.value.length == 0) {
         focusposition = Math.max(position - 1, 0)
         this.$refs.inputref[focusposition].focus()

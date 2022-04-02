@@ -32,7 +32,6 @@ export default {
         { position: 3, text: "" },
         { position: 4, text: "" },
       ],
-      formValues: {},
     }
   },
   
@@ -42,6 +41,22 @@ export default {
       default: 0
     },
   },
+
+  computed: {
+
+    formValues() {
+      // Return object of form { posN: letter1, posM: letter2 } for all form positions having a value
+      const r = {}
+      this.inputFields.forEach(x =>{
+        if (x.text !="") {
+          const pos = x.position
+          r[pos] = x.text
+        }
+      })
+      return r
+    }
+  },
+
   methods: {
     
     processAtPos(e) {
@@ -55,9 +70,6 @@ export default {
         // overwrite field
         this.inputFields[position].text = charUpper
 
-        // add wordlist constraint and send event to parent components
-        this.formValues[position] = charUpper
-
         // set focus
         const maxpos = this.$refs.inputref.length - 1
         const focusposition = Math.min(position + 1, maxpos)
@@ -65,7 +77,6 @@ export default {
       } else {
 
         this.inputFields[position].text = ""
-        delete(this.formValues[position])
 
       }
       this.emitFormValues()
@@ -92,7 +103,6 @@ export default {
       this.inputFields.forEach(x => {
         x.text = ""
       })
-      this.formValues = {}
     }
   }
 }

@@ -15,3 +15,7 @@
 * Delete all lines not 5 letters wide using vim command :v/^.\{-5}$/d
 * Convert lowercase ggVGu
 * remove duplicates :% sort u
+
+## sed / linux snippets
+
+`cat de.txt |sed -e '/[-|\/.0123456789]/d'|LANG=de_DE.UTF-8 sed -ne '/^.\{5\}$/p'`

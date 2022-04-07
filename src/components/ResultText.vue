@@ -4,7 +4,7 @@
       {{ resultLengthDisplay.toFixed() }}
       <span class="langText">{{ langDisplay }}</span>
     </h2>
-    <div class="wordbody">
+    <div class="wordbody font-monospace">
       {{ wordsTextDisplay }}
     </div>
   </div>
